@@ -21,3 +21,5 @@ Algunas de las instalaciones recomendadas para el curso son las siguientes: [(Do
 - Better Dockerfile Syntax (Extensión de VSCode)
 
 ## Documentación
+
+- [Sección 2: Breve reforzamiento sobre Nest](./02-Reforzamiento_Nest/README.md)
