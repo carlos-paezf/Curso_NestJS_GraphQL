@@ -6,7 +6,7 @@ Curso impartido por [Fernando Herrera](https://fernando-herrera.com/#/) en la pl
 
 ## Instalaciones necesarias o recomendadas
 
-Algunas de las instalaciones recomendadas para el curso son las siguientes: [(Documento con enlaces)](https://gist.github.com/Klerith/c0ef4f48d986e2cf3308bb54fff84ea5)
+Algunas de las instalaciones recomendadas para el curso son las siguientes: [(Documento con enlaces)](https://gist.github.com/Klerith/bd9f9c0aaaf06037e042e1f0b6f2aa5c)
 
 - Visual Studio Code
 - Postman
