@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { Todo } from './entities/todo.entity';
 
 @Injectable()
 export class TodoService {
-  create(createTodoDto: CreateTodoDto) {
-    return 'This action adds a new todo';
-  }
+    private todos: Todo[] = [
+        { id: 1, description: "Soul's Stone", done: false },
+        { id: 2, description: "Time's Stone", done: false },
+        { id: 3, description: "Space's Stone", done: false },
+        { id: 4, description: "Mind's Stone", done: false },
+        { id: 5, description: "Power's Stone", done: false },
+        { id: 6, description: "Realty's Stone", done: true },
+    ];
 
-  findAll() {
-    return `This action returns all todo`;
-  }
+    create ( createTodoDto: CreateTodoDto ) {
+        return 'This action adds a new todo';
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} todo`;
-  }
+    findAll () {
+        return this.todos;
+    }
 
-  update(id: number, updateTodoDto: UpdateTodoDto) {
-    return `This action updates a #${id} todo`;
-  }
+    findOne ( id: number ) {
+        const todo = this.todos.filter( ( todo ) => todo.id === id );
 
-  remove(id: number) {
-    return `This action removes a #${id} todo`;
-  }
+        if ( !todo ) throw new NotFoundException( `TODO with id #${ id } not found` );
+
+        return todo;
+    }
+
+    update ( id: number, updateTodoDto: UpdateTodoDto ) {
+        return `This action updates a #${ id } todo`;
+    }
+
+    remove ( id: number ) {
+        return `This action removes a #${ id } todo`;
+    }
 }

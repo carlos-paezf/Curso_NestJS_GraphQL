@@ -37,3 +37,86 @@ $: nest g res todo --no-spec
 Lo anterior crear una entidad, 2 DTO's (Data Transfer Object), 1 servicio, 1 controlador y un modulo, además de actualizar el modulo principal de la aplicación. Otro punto importante es que a través de la creación del recurso, contamos con un esquema para los endpoints del módulo, es decir, contamos con el esqueleto de los métodos para el CRUD.
 
 En el módulo se declaran los controladores y proveedores del recurso, además de que podemos declarar las importaciones o exportaciones correspondientes al módulo. En un controlador tenemos el punto de acceso a los endpoints del recurso, mientras que el servicio se encarga de ejecutar las acciones sobre una entidad. Los DTO's son estructuras que se encargan de estandarizar la data que llega desde la petición, logrando evitar errores.
+
+## Seleccionar ToDo's
+
+Vamos a moldear la forma en que lucen los ToDo's dentro de la entidad que se creo en la lección anterior:
+
+```ts
+export class Todo {
+    id: number;
+
+    description: string;
+
+    done: boolean;
+}
+```
+
+Dentro del servicio creamos un arreglo de todos:
+
+```ts
+@Injectable()
+export class TodoService {
+    private todos: Todo[] = [
+        { id: 1, description: "Soul's Stone", done: false },
+        { id: 2, description: "Time's Stone", done: false },
+        { id: 3, description: "Space's Stone", done: false },
+        { id: 4, description: "Mind's Stone", done: false },
+        { id: 5, description: "Power's Stone", done: false },
+        { id: 6, description: "Realty's Stone", done: true },
+    ];
+    ...
+}
+```
+
+Ahora, en el método de `findAll` dentro del servicio, retornamos el arreglo de todos:
+
+```ts
+@Injectable()
+export class TodoService {
+    ...
+    findAll () {
+        return this.todos;
+    }
+    ...
+}
+```
+
+Cuando hacemos una petición a `http://localhost:3000/todos` usando el verbo GET, recibimos la lista de tareas que dejamos.
+
+Usando TypeScript podemos aprovechar el tipado estricto para evitar errores en la ejecución de los proyectos. En este momento queremos obtener una tarea por su id, pero actualmente el controlador está recibiendo un string, la intención es convertirlo a número o lanzar una excepción. Nest nos ofrece un pipe llamado `ParseIntPipe` con el cual completamos dicha tarea, y logramos tener un código más limpio y estructurado:
+
+```ts
+import { ..., ParseIntPipe } from '@nestjs/common';
+...
+
+@Controller( 'todo' )
+export class TodoController {
+    ...
+    @Get( ':id' )
+    findOne ( @Param( 'id', ParseIntPipe ) id: number ) {
+        return this.todoService.findOne( id );
+    }
+    ...
+}
+```
+
+Por el lado del servicio solo nos encargamos de especificar la lógica de como se debe obtener el todo mediante su id:
+
+```ts
+import { ..., NotFoundException } from '@nestjs/common';
+...
+
+@Injectable()
+export class TodoService {
+    ...
+    findOne ( id: number ) {
+         const todo = this.todos.filter( ( todo ) => todo.id === id );
+
+        if ( !todo ) throw new NotFoundException( `TODO with id #${ id } not found` );
+
+        return todo;
+    }
+    ...
+}
+```
