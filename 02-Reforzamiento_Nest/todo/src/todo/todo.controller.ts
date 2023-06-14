@@ -23,8 +23,8 @@ export class TodoController {
     }
 
     @Patch( ':id' )
-    update ( @Param( 'id' ) id: string, @Body() updateTodoDto: UpdateTodoDto ) {
-        return this.todoService.update( +id, updateTodoDto );
+    update ( @Param( 'id', ParseIntPipe ) id: number, @Body() updateTodoDto: UpdateTodoDto ) {
+        return this.todoService.update( id, updateTodoDto );
     }
 
     @Delete( ':id' )

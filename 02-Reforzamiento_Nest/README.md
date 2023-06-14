@@ -183,3 +183,39 @@ export class TodoService {
     ...
 }
 ```
+
+## Actualizar un TODO
+
+Iniciamos convirtiendo el valor del parámetro en el controlador a un número entero mediante un pipe:
+
+```ts
+@Controller( 'todo' )
+export class TodoController {
+    ...
+    @Patch( ':id' )
+    update ( @Param( 'id', ParseIntPipe ) id: number, @Body() updateTodoDto: UpdateTodoDto ) {
+        return this.todoService.update( id, updateTodoDto );
+    }
+    ...
+}
+```
+
+En esta ocasión no modificamos el DTO de actualización, ya que este hereda de manera opcional todas las propiedades definidas en el DTO de creación. Ahora procedemos a hacer la actualización del todo, teniendo en cuenta que se deben validar los campos que ingresan en el body de la petición:
+
+```ts
+@Injectable()
+export class TodoService {
+    ...
+    update ( id: number, updateTodoDto: UpdateTodoDto ) {
+        const todo = this.findOne( id );
+
+        if ( updateTodoDto.done !== undefined ) todo.done = updateTodoDto.done;
+        if ( updateTodoDto.description ) todo.description = updateTodoDto.description;
+
+        this.todos = this.todos.map( dbTodo => ( dbTodo.id === id ) ? todo : dbTodo );
+
+        return todo;
+    }
+    ...
+}
+```

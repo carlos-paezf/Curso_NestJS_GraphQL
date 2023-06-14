@@ -30,7 +30,7 @@ export class TodoService {
     }
 
     findOne ( id: number ) {
-        const todo = this.todos.filter( ( todo ) => todo.id === id );
+        const todo = this.todos.find( ( todo ) => todo.id === id );
 
         if ( !todo ) throw new NotFoundException( `TODO with id #${ id } not found` );
 
@@ -38,7 +38,14 @@ export class TodoService {
     }
 
     update ( id: number, updateTodoDto: UpdateTodoDto ) {
-        return `This action updates a #${ id } todo`;
+        const todo = this.findOne( id );
+
+        if ( updateTodoDto.done !== undefined ) todo.done = updateTodoDto.done;
+        if ( updateTodoDto.description ) todo.description = updateTodoDto.description;
+
+        this.todos = this.todos.map( dbTodo => ( dbTodo.id === id ) ? todo : dbTodo );
+
+        return todo;
     }
 
     remove ( id: number ) {
