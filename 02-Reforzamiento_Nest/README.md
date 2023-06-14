@@ -120,3 +120,66 @@ export class TodoService {
     ...
 }
 ```
+
+## Crear TODO
+
+Vamos a definir la estructura que esperamos recibir en el body de la petición del método POST, y con el cual nos aseguramos que sea confiable la creación del TODO. Dicha estructura la definimos en los archivos de DTO, pero antes realizamos la instalación de 2 paquetes necesarios:
+
+```txt
+$: pnpm add class-validator class-transformer
+```
+
+Adicional configuramos la lista blanca de propiedades que permitimos en la petición, y para ello, vamos al archivo `main.ts` y añadimos:
+
+```ts
+import { ValidationPipe } from '@nestjs/common';
+...
+
+async function bootstrap () {
+    const app = await NestFactory.create( AppModule );
+    
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+            forbidNonWhitelisted: true
+        })
+    )
+    ...
+}
+```
+
+Con lo anterior logramos que se valide la información que se envía, y que se ajuste a la estructura que nosotros declaremos en el DTO:
+
+```ts
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
+
+export class CreateTodoDto {
+    @IsString()
+    @IsNotEmpty()
+    description: string;
+
+    @IsOptional()
+    @IsBoolean()
+    done?: boolean;
+}
+```
+
+Ahora si podemos realizar la creación dentro del servicio:
+
+```ts
+@Injectable()
+export class TodoService {
+    ...
+    create ( createTodoDto: CreateTodoDto ) {
+        const todo = new Todo();
+        todo.id = Math.max(...this.todos.map(todo => todo.id), 0) + 1;
+        todo.description = todo.description;
+        todo.done = todo.done;
+
+        this.todos.push( todo );
+
+        return todo;
+    }
+    ...
+}
+```
