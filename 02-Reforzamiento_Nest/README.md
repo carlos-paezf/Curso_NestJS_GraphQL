@@ -219,3 +219,34 @@ export class TodoService {
     ...
 }
 ```
+
+## Eliminar un TODO
+
+Para eliminar un todo necesitamos su id, por lo que transformamos el parámetro de la petición en un entero:
+
+```ts
+@Controller( 'todo' )
+export class TodoController {
+    ...
+    @Delete( ':id' )
+    remove ( @Param( 'id', ParseIntPipe ) id: number ) {
+        return this.todoService.remove( id );
+    }
+}
+```
+
+Luego, en el servicio eliminamos el todo y por lo tanto no retornaremos nada a menos que ocurra error:
+
+```ts
+@Injectable()
+export class TodoService {
+    ...
+    remove ( id: number ) {
+        this.findOne( id );
+
+        this.todos = this.todos.filter( todo => todo.id !== id );
+
+        return;
+    }
+}
+```
