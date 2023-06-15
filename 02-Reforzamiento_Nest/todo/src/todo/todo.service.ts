@@ -17,8 +17,8 @@ export class TodoService {
     create ( createTodoDto: CreateTodoDto ) {
         const todo = new Todo();
         todo.id = Math.max( ...this.todos.map( todo => todo.id ), 0 ) + 1;
-        todo.description = todo.description;
-        todo.done = todo.done;
+        todo.description = createTodoDto.description;
+        todo.done = createTodoDto.done;
 
         this.todos.push( todo );
 
