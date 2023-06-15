@@ -23,3 +23,4 @@ Algunas de las instalaciones recomendadas para el curso son las siguientes: [(Do
 ## Documentación
 
 - [Sección 2: Breve reforzamiento sobre Nest](./02-Reforzamiento_Nest/README.md)
+- [Sección 3: Nest + GraphQL - Introducción](./03-Nest_GraphQL_Introduccion/README.md)
